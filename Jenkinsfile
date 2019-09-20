@@ -3,7 +3,8 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '''dotnet build HotelBooking.sln --configuration Release'''
+        sh 'dotnet restore'
+        sh 'dotnet build HotelBooking.sln --configuration Release'
       }
     }
     stage('Test') {
