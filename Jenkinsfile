@@ -9,7 +9,8 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh 'dotnet test **/*.csproj'
+        echo 'Testing'
+        sh 'dotnet test '**/*Tests/*.csproj'
       }
     }
   }
