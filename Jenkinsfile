@@ -3,17 +3,22 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'dotnet build **/*.csproj --configuration Release'
+        sh '''dotnet build HotelBooking.Core.csproj --configuration Release
+dotnet build HotelBooking.Infrastructure.csproj --configuration Release
+dotnet build HotelBooking.Mvc.csproj --configuration Release
+dotnet build HotelBooking.WebApi.csproj --configuration Release
+dotnet build HotelBooking.UnitTests.csproj --configuration Release
+dotnet build HotelBooking.IntegrationTests.csproj --configuration Release'''
       }
     }
-    stage('Publish') {
+    stage('Unit Test') {
       steps {
-        sh 'dotnet Publish **/*.csproj --configuration Release'
+        sh 'dotnet test HotelBooking.UnitTests.csproj'
       }
     }
-    stage('Test') {
+    stage('Integration Tests') {
       steps {
-        sh 'dotnet test \'**/*Tests/*.csproj'
+        sh 'dotnet test HotelBooking.IntegrationTests.csproj'
       }
     }
   }
