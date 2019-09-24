@@ -3,7 +3,7 @@ using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
 using Xunit;
 
-namespace HotelBooking.UnitTests
+namespace HotelBooking.UnitTests.Services
 {
     public class BookingManagerTests
     {
