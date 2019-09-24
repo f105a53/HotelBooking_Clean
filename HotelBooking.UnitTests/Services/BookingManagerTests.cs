@@ -35,5 +35,11 @@ namespace HotelBooking.UnitTests.Services
             Assert.NotEqual(-1, roomId);
         }
 
+        [Fact]
+        public void GetFullyOccupiedDates_InvalidDates()
+        {
+            Assert.Throws<ArgumentException>(() => bookingManager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
+        }
+
     }
 }
