@@ -41,5 +41,12 @@ namespace HotelBooking.UnitTests.Services
             Assert.Throws<ArgumentException>(() => bookingManager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
         }
 
+        [Fact]
+        public void GetFullyOccupiedDates()
+        {
+            var dates = bookingManager.GetFullyOccupiedDates(DateTime.MinValue, DateTime.MaxValue);
+            Assert.Empty(dates);
+        }
+
     }
 }
