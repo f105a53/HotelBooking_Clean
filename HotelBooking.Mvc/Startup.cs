@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace HotelBooking.Mvc
 {
@@ -40,11 +41,11 @@ namespace HotelBooking.Mvc
             services.AddScoped<IBookingViewModel, BookingViewModel>();
             services.AddTransient<IDbInitializer, DbInitializer>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -70,12 +71,12 @@ namespace HotelBooking.Mvc
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                });
         }
     }
 }
