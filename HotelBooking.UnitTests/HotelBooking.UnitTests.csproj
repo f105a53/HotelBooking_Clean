@@ -15,11 +15,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="FsCheck.Xunit" Version="2.14.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="UnitTest1.cs" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HotelBooking.Core\HotelBooking.Core.csproj" />
   </ItemGroup>

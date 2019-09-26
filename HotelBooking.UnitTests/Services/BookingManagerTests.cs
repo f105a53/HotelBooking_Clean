@@ -1,6 +1,8 @@
 using System;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using FsCheck;
+using FsCheck.Xunit;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
 using Xunit;
@@ -54,6 +56,22 @@ namespace HotelBooking.UnitTests.Services
         public void FindAvailableRoom_StartDateOk_EndDateConflict()
         {
             bookingManager.FindAvailableRoom(DateTime.Today.AddDays(5), DateTime.Today.AddDays(15)).Should().Be(-1);
+        }
+
+        [Property]
+        public void GetFullyOccupiedDates(DateTime start,DateTime end)
+        {
+            if (start > end)
+            {
+                Assert.Throws<ArgumentException>(() => bookingManager.GetFullyOccupiedDates(start, end));
+            }
+            else
+            {
+                bookingManager.GetFullyOccupiedDates(start, end).Should()
+                    .NotBeNull().And
+                    .NotContainNulls().And
+                    .HaveCountLessOrEqualTo(11);
+            }
         }
 
     }
