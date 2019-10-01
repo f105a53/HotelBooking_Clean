@@ -1,7 +1,5 @@
 using System;
 using FluentAssertions;
-using FluentAssertions.Extensions;
-using FsCheck;
 using FsCheck.Xunit;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
@@ -22,11 +20,11 @@ namespace HotelBooking.UnitTests.Services
                 return new BookingManager(bookingRepository, roomRepository);
             }
         }
-      
+
         [Fact]
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
-            DateTime date = DateTime.Today;
+            var date = DateTime.Today;
             Assert.Throws<ArgumentException>(() => BookingManager.FindAvailableRoom(date, date));
         }
 
@@ -34,9 +32,9 @@ namespace HotelBooking.UnitTests.Services
         public void FindAvailableRoom_RoomAvailable_RoomIdNotMinusOne()
         {
             // Arrange
-            DateTime date = DateTime.Today.AddDays(1);
+            var date = DateTime.Today.AddDays(1);
             // Act
-            int roomId = BookingManager.FindAvailableRoom(date, date);
+            var roomId = BookingManager.FindAvailableRoom(date, date);
             // Assert
             Assert.NotEqual(-1, roomId);
         }
@@ -44,7 +42,8 @@ namespace HotelBooking.UnitTests.Services
         [Fact]
         public void GetFullyOccupiedDates_InvalidDates()
         {
-            Assert.Throws<ArgumentException>(() => BookingManager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
+            Assert.Throws<ArgumentException>(() =>
+                BookingManager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
         }
 
         [Fact(Skip = "I don't know how to fix this")]
@@ -61,20 +60,15 @@ namespace HotelBooking.UnitTests.Services
         }
 
         [Property]
-        public void GetFullyOccupiedDates(DateTime start,DateTime end)
+        public void GetFullyOccupiedDates(DateTime start, DateTime end)
         {
             if (start > end)
-            {
                 Assert.Throws<ArgumentException>(() => BookingManager.GetFullyOccupiedDates(start, end));
-            }
             else
-            {
                 BookingManager.GetFullyOccupiedDates(start, end).Should()
                     .NotBeNull().And
                     .NotContainNulls().And
                     .HaveCountLessOrEqualTo(11);
-            }
         }
-
     }
 }
