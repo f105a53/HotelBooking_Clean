@@ -12,9 +12,9 @@ pipeline {
         stage('Unit Test') {
           steps {
             dir ('HotelBooking.UnitTests') {
-              sh 'dotnet test --configuration Release /p:AltCover=true  /p:AltCoverForce=true --logger "trx;logfilename=unit.xml" --results-directory TestResults'
+              sh 'dotnet test --configuration Release /p:AltCover=true  /p:AltCoverForce=true --logger "trx;logfilename=unit.xml" --results-directory WORKSPACE/TestResults/'
               sh 'curl -s https://codecov.io/bash | bash -s - -t 4a8b2c4d-4136-470d-813f-3717be48c9aa'
-			  mstest testResultsFile:"TestResults/*.trx", keepLongStdio: true
+			  mstest testResultsFile:"WORKSPACE/TestResults/*.trx", keepLongStdio: true
             }
           }
         }
