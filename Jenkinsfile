@@ -16,6 +16,7 @@ pipeline {
               sh 'curl -s https://codecov.io/bash | bash -s - -t 4a8b2c4d-4136-470d-813f-3717be48c9aa'
 			  mstest testResultsFile:"/var/lib/jenkins/workspace/oking_Clean_jenkins-test-reports/HotelBooking.UnitTests/TestResults/unit.trx", keepLongStdio: true
             }
+
           }
         }
         stage('Integration Tests') {
@@ -25,6 +26,7 @@ pipeline {
               sh 'curl -s https://codecov.io/bash | bash -s - -t 4a8b2c4d-4136-470d-813f-3717be48c9aa'
 			  mstest testResultsFile:"/var/lib/jenkins/workspace/oking_Clean_jenkins-test-reports/HotelBooking.UnitTests/TestResults/integration.trx", keepLongStdio: true
             }
+
           }
         }
       }
