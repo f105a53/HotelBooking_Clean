@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using FsCheck.Xunit;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
+using Moq;
 using Xunit;
 
 namespace HotelBooking.UnitTests.Services
@@ -54,6 +56,18 @@ namespace HotelBooking.UnitTests.Services
         }
 
         [Fact]
+        public void GetFullyOccupiedDates_NoBookings_ReturnsEmptyList()
+        {
+            var bookingRepo = new Mock<IRepository<Booking>>(MockBehavior.Strict);
+            bookingRepo.Setup(r => r.GetAll()).Returns(new List<Booking>());
+            var roomRepo = new Mock<IRepository<Room>>(MockBehavior.Strict);
+            roomRepo.Setup(r => r.GetAll()).Returns(new List<Room>());
+
+            var bookingManager = new BookingManager(bookingRepo.Object, roomRepo.Object);
+            bookingManager.GetFullyOccupiedDates(new DateTime(), new DateTime()).Should().BeEmpty();
+        }
+
+        [Fact]
         public void FindAvailableRoom_StartDateOk_EndDateConflict()
         {
             Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(5), DateTime.Today.AddDays(15)).Should().Be(-1);
@@ -79,6 +93,16 @@ namespace HotelBooking.UnitTests.Services
                     {StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(2)}).Should()
                 .BeTrue();
             ((FakeBookingRepository) repository).addWasCalled.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CreateBooking_WhileFullyBooked_Fails()
+        {
+            var (manager, repository) = Fakes;
+            manager.CreateBooking(new Booking
+            { StartDate = DateTime.Today.AddDays(15), EndDate = DateTime.Today.AddDays(16) }).Should()
+                .BeFalse();
+            ((FakeBookingRepository)repository).addWasCalled.Should().BeFalse();
         }
     }
 }
