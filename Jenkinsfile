@@ -29,6 +29,13 @@ pipeline {
 
           }
         }
+		stage('Deploy') {
+		  steps {
+		    sh 'sudo systemctl stop kestrel-Jenkins-hotelbooking-master-mvc.service'
+			sh 'dotnet publish HotelBooking.sln --configuration Release'
+			sh 'sudo systemctl start kestrel-Jenkins-hotelbooking-master-mvc.service'
+		  }
+		}
       }
     }
   }
