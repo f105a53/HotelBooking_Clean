@@ -1,0 +1,13 @@
+coverage:
+  status:
+    project:
+      Core:
+        flags: core
+        target: 100%
+flags:
+  core:  
+    paths:
+      - HotelBooking.Core
+  tests:
+    paths:
+      - *Tests
