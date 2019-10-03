@@ -107,5 +107,14 @@ namespace HotelBooking.UnitTests.Services
                 .BeFalse();
             ((FakeBookingRepository)repository).addWasCalled.Should().BeFalse();
         }
+
+        [Fact]
+        public void CreateBooking_InThePast_ThrowsArgumentException()
+        {
+            var (manager, repository) = Fakes;
+            Assert.Throws<ArgumentException>(() => manager.CreateBooking(new Booking
+            { StartDate = DateTime.Today.AddDays(-1), EndDate = DateTime.Today.AddDays(1) }));
+            ((FakeBookingRepository)repository).addWasCalled.Should().BeFalse();
+        }
     }
 }
