@@ -36,8 +36,8 @@ pipeline {
 			sh 'sudo systemctl stop kestrel-Jenkins-hotelbooking-master-mvc.service'
 			sh 'sudo systemctl stop kestrel-Jenkins-hotelbooking-master-api.service'
 			sh 'dotnet publish HotelBooking.sln --configuration Release'
-			sh 'sudo systemctl start kestrel-Jenkins-hotelbooking-master-mvc.service
-			sh 'sudo systemctl start kestrel-Jenkins-hotelbooking-master-api.service
+			sh 'sudo systemctl start kestrel-Jenkins-hotelbooking-master-mvc.service'
+			sh 'sudo systemctl start kestrel-Jenkins-hotelbooking-master-api.service'
 		}
 	}
   }
