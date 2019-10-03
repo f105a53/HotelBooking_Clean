@@ -42,13 +42,13 @@ namespace HotelBooking.UnitTests.Services
         }
 
         [Fact]
-        public void GetFullyOccupiedDates_InvalidDates()
+        public void GetFullyOccupiedDates_InvalidDates_ThrowsArgumentException()
         {
             Assert.Throws<ArgumentException>(() =>
                 Fakes.manager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
         }
 
-        [Fact(Skip = "I don't know how to fix this")]
+        [Fact(Skip = "Edge case, fix implemenation later")]
         public void GetFullyOccupiedDates_All()
         {
             var dates = Fakes.manager.GetFullyOccupiedDates(DateTime.MinValue, DateTime.MaxValue);
@@ -67,14 +67,17 @@ namespace HotelBooking.UnitTests.Services
             bookingManager.GetFullyOccupiedDates(new DateTime(), new DateTime()).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FindAvailableRoom_StartDateOk_EndDateConflict()
+        [Theory]
+        [InlineData(5, 15)]
+        [InlineData(15, 16)]
+        [InlineData(15, 25)]
+        public void FindAvailableRoom_RoomsAlreadyBooked_ReturnsMinusOne(int start, int end)
         {
-            Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(5), DateTime.Today.AddDays(15)).Should().Be(-1);
+            Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should().Be(-1);
         }
 
         [Property]
-        public void GetFullyOccupiedDates(DateTime start, DateTime end)
+        public void GetFullyOccupiedDates_RandomDates(DateTime start, DateTime end)
         {
             if (start > end)
                 Assert.Throws<ArgumentException>(() => Fakes.manager.GetFullyOccupiedDates(start, end));
@@ -86,7 +89,7 @@ namespace HotelBooking.UnitTests.Services
         }
 
         [Fact]
-        public void CreateBooking()
+        public void CreateBooking_ValidBooking_Created()
         {
             var (manager, repository) = Fakes;
             manager.CreateBooking(new Booking
