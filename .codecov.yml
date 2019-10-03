@@ -1,13 +1,14 @@
 coverage:
   status:
     project:
+      default:
       Core:
         flags: core
         target: 100%
 flags:
   core:  
     paths:
-      - HotelBooking.Core
+      - HotelBooking.Core/
   tests:
     paths:
-      - *Tests
+      - *Tests/
