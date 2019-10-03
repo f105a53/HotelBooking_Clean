@@ -9,7 +9,7 @@ namespace HotelBooking.UnitTests.Services
 {
     public class BookingManagerTests
     {
-        private static IBookingManager BookingManager
+        private static (BookingManager manager, IRepository<Booking> repository) Fakes
         {
             get
             {
@@ -17,7 +17,7 @@ namespace HotelBooking.UnitTests.Services
                 var end = DateTime.Today.AddDays(20);
                 IRepository<Booking> bookingRepository = new FakeBookingRepository(start, end);
                 IRepository<Room> roomRepository = new FakeRoomRepository();
-                return new BookingManager(bookingRepository, roomRepository);
+                return (new BookingManager(bookingRepository, roomRepository), bookingRepository);
             }
         }
 
@@ -25,7 +25,7 @@ namespace HotelBooking.UnitTests.Services
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
             var date = DateTime.Today;
-            Assert.Throws<ArgumentException>(() => BookingManager.FindAvailableRoom(date, date));
+            Assert.Throws<ArgumentException>(() => Fakes.manager.FindAvailableRoom(date, date));
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace HotelBooking.UnitTests.Services
             // Arrange
             var date = DateTime.Today.AddDays(1);
             // Act
-            var roomId = BookingManager.FindAvailableRoom(date, date);
+            var roomId = Fakes.manager.FindAvailableRoom(date, date);
             // Assert
             Assert.NotEqual(-1, roomId);
         }
@@ -43,32 +43,42 @@ namespace HotelBooking.UnitTests.Services
         public void GetFullyOccupiedDates_InvalidDates()
         {
             Assert.Throws<ArgumentException>(() =>
-                BookingManager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
+                Fakes.manager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
         }
 
         [Fact(Skip = "I don't know how to fix this")]
         public void GetFullyOccupiedDates_All()
         {
-            var dates = BookingManager.GetFullyOccupiedDates(DateTime.MinValue, DateTime.MaxValue);
+            var dates = Fakes.manager.GetFullyOccupiedDates(DateTime.MinValue, DateTime.MaxValue);
             dates.Should().HaveCount(10);
         }
 
         [Fact]
         public void FindAvailableRoom_StartDateOk_EndDateConflict()
         {
-            BookingManager.FindAvailableRoom(DateTime.Today.AddDays(5), DateTime.Today.AddDays(15)).Should().Be(-1);
+            Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(5), DateTime.Today.AddDays(15)).Should().Be(-1);
         }
 
         [Property]
         public void GetFullyOccupiedDates(DateTime start, DateTime end)
         {
             if (start > end)
-                Assert.Throws<ArgumentException>(() => BookingManager.GetFullyOccupiedDates(start, end));
+                Assert.Throws<ArgumentException>(() => Fakes.manager.GetFullyOccupiedDates(start, end));
             else
-                BookingManager.GetFullyOccupiedDates(start, end).Should()
+                Fakes.manager.GetFullyOccupiedDates(start, end).Should()
                     .NotBeNull().And
                     .NotContainNulls().And
                     .HaveCountLessOrEqualTo(11);
+        }
+
+        [Fact]
+        public void CreateBooking()
+        {
+            var (manager, repository) = Fakes;
+            manager.CreateBooking(new Booking
+                    {StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(2)}).Should()
+                .BeTrue();
+            ((FakeBookingRepository) repository).addWasCalled.Should().BeTrue();
         }
     }
 }
