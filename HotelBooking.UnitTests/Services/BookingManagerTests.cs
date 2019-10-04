@@ -48,6 +48,13 @@ namespace HotelBooking.UnitTests.Services
                 Fakes.manager.GetFullyOccupiedDates(DateTime.MaxValue, DateTime.MinValue));
         }
 
+        [Fact]
+        public void FindAvailableRoom_InvalidDates_ThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                Fakes.manager.FindAvailableRoom(DateTime.MaxValue, DateTime.MinValue));
+        }
+
         [Fact(Skip = "Edge case, fix implemenation later")]
         public void GetFullyOccupiedDates_All()
         {
