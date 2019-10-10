@@ -1,10 +1,18 @@
 coverage:
   status:
     project:
-      default:
-      Core:
+      core:
         flags: core
         target: 100%
+      tests:
+        flags: tests
+      api:
+        flags: api
+      mvc:
+        flags: mvc
+      infrastructure:
+        flags: infrastructure
+      
 flags:
   core:  
     paths:
@@ -12,3 +20,12 @@ flags:
   tests:
     paths:
       - *Tests/
+  api:
+    paths:
+      - HotelBooking.WebApi/
+  mvc:
+    paths:
+      - HotelBooking.Mvc/
+  infrastructure:
+    paths:
+      - HotelBooking.Infrastructure/
