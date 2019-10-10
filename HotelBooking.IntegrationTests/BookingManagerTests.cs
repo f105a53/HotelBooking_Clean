@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using HotelBooking.Core;
 using HotelBooking.Infrastructure;
 using HotelBooking.Infrastructure.Repositories;
@@ -16,8 +17,8 @@ namespace HotelBooking.IntegrationTests
         // if a database constraint is violated, and this is a desirable behavior
         // when testing.
 
-        SqliteConnection connection;
-        BookingManager bookingManager;
+        private readonly SqliteConnection connection;
+        private readonly BookingManager bookingManager;
 
         public BookingManagerTests()
         {
@@ -28,7 +29,7 @@ namespace HotelBooking.IntegrationTests
 
             // Initialize test database
             var options = new DbContextOptionsBuilder<HotelBookingContext>()
-                            .UseSqlite(connection).Options;
+                .UseSqlite(connection).Options;
             var dbContext = new HotelBookingContext(options);
             IDbInitializer dbInitializer = new DbInitializer();
             dbInitializer.Initialize(dbContext);
@@ -46,6 +47,32 @@ namespace HotelBooking.IntegrationTests
         }
 
         [Fact]
+        public void CreateBooking_WhileFullyBooked_Fails()
+        {
+            var bookingCreated = bookingManager.CreateBooking(
+                new Booking
+                {
+                    StartDate = DateTime.Today.AddDays(15),
+                    EndDate = DateTime.Today.AddDays(16)
+                });
+            bookingCreated.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CreateBooking_InvalidBooking_Throws()
+        {
+            Assert.Throws<DbUpdateException>(() =>
+            {
+                var bookingCreated = bookingManager.CreateBooking(
+                    new Booking
+                    {
+                        StartDate = DateTime.Today.AddDays(1),
+                        EndDate = DateTime.Today.AddDays(3)
+                    });
+            });
+        }
+
+        [Fact]
         public void FindAvailableRoom_RoomNotAvailable_RoomIdIsMinusOne()
         {
             // Act
@@ -53,5 +80,6 @@ namespace HotelBooking.IntegrationTests
             // Assert
             Assert.Equal(-1, roomId);
         }
+        
     }
 }
