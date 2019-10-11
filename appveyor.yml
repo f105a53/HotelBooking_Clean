@@ -1,0 +1,12 @@
+version: "{build}"
+image: Visual Studio 2019
+install:
+- cmd: choco install codecov -y
+before_build:
+- pwsh: dotnet restore
+build:
+  verbosity: minimal
+test_script:
+- cmd: dotnet test --configuration Release /p:AltCover=true /p:AltCoverForce=true
+- cmd: codecov -f "HotelBooking.UnitTests\coverage.xml" --flag unit
+- cmd: codecov -f "HotelBooking.IntegrationTests\coverage.xml" --flag integration
