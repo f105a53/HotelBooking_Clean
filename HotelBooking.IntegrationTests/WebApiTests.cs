@@ -1,27 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
+using HotelBooking.WebApi;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace HotelBooking.IntegrationTests
 {
-    public class WebApiTests : IClassFixture<WebApplicationFactory<WebApi.Startup>>
+    public class WebApiTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private readonly WebApplicationFactory<WebApi.Startup> _factory;
-
-        public WebApiTests(WebApplicationFactory<WebApi.Startup> factory)
+        public WebApiTests(WebApplicationFactory<Startup> factory)
         {
             _factory = factory;
         }
 
+        private readonly WebApplicationFactory<Startup> _factory;
+
         [Fact]
-        public void Startup()
+        public async Task Startup()
         {
             _factory.Should().NotBeNull();
-            _factory.CreateClient().Should().NotBeNull();
+            var client = _factory.CreateClient();
+            client.Should().NotBeNull();
+            var result = await client.GetAsync("/");
+            result.IsSuccessStatusCode.Should().BeTrue();
         }
     }
 }
