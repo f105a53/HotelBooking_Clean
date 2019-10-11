@@ -78,6 +78,7 @@ namespace HotelBooking.UnitTests.Services
         [InlineData(5, 15)]
         [InlineData(15, 16)]
         [InlineData(15, 25)]
+        [InlineData(5, 25)]
         public void FindAvailableRoom_RoomsAlreadyBooked_ReturnsMinusOne(int start, int end)
         {
             Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should().Be(-1);
