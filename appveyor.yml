@@ -1,4 +1,4 @@
-version: {build}
+version: "{build}"
 image: Visual Studio 2019
 install:
 - cmd: choco install codecov -y
