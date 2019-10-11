@@ -8,5 +8,5 @@ build:
   verbosity: minimal
 test_script:
 - cmd: dotnet test --configuration Release /p:AltCover=true /p:AltCoverForce=true
-- cmd: codecov -f "HotelBooking.UnitTests\coverage.xml" -F unit
-- cmd: codecov -f "HotelBooking.IntegrationTests\coverage.xml" -F integration
+- cmd: codecov -f "HotelBooking.UnitTests\coverage.xml" --flag unit
+- cmd: codecov -f "HotelBooking.IntegrationTests\coverage.xml" --flag integration
