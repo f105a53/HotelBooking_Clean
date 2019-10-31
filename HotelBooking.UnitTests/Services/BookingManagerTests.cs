@@ -64,12 +64,13 @@ namespace HotelBooking.UnitTests.Services
             ((FakeBookingRepository) repository).addWasCalled.Should().BeTrue();
         }
 
-        [Fact]
-        public void CreateBooking_WhileFullyBooked_Fails()
+        [InlineData(15,16)]
+        [Theory]
+        public void CreateBooking_WhileFullyBooked_Fails(int start, int end)
         {
             var (manager, repository) = Fakes;
             manager.CreateBooking(new Booking
-                    {StartDate = DateTime.Today.AddDays(15), EndDate = DateTime.Today.AddDays(16)}).Should()
+                    {StartDate = DateTime.Today.AddDays(start), EndDate = DateTime.Today.AddDays(end)}).Should()
                 .BeFalse();
             ((FakeBookingRepository) repository).addWasCalled.Should().BeFalse();
         }
