@@ -75,6 +75,36 @@ namespace HotelBooking.UnitTests.Services
             ((FakeBookingRepository) repository).addWasCalled.Should().BeFalse();
         }
 
+        //TestCase 1
+        [InlineData(9,9,true)]
+        //TestCase 2
+        [InlineData(9,21,false)]
+        //TestCase 3
+        [InlineData(21,21,true)]
+        //TestCase 4
+        [InlineData(9,10,false)]
+        //TestCase 5
+        [InlineData(9,20,false)]
+        //TestCase 6
+        [InlineData(10,21,false)]
+        //TestCase 7
+        [InlineData(20,21,false)]
+        //TestCase 8
+        [InlineData(10,10,false)]
+        //TestCase 9
+        [InlineData(10,20,false)]
+        //TestCase 10
+        [InlineData(20,20,false)]
+        [Theory]
+        public void CreateBooking_DecisionTable(int start, int end, bool shouldSucceed)
+        {
+            var (manager, repository) = Fakes;
+            manager.CreateBooking(new Booking
+                    {StartDate = DateTime.Today.AddDays(start), EndDate = DateTime.Today.AddDays(end)}).Should()
+                .Be(shouldSucceed);
+            ((FakeBookingRepository) repository).addWasCalled.Should().Be(shouldSucceed);
+        }
+
         [Fact]
         public void FindAvailableRoom_InvalidDates_ThrowsArgumentException()
         {
