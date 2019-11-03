@@ -15,6 +15,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
     <PackageReference Include="Moq" Version="4.13.0" />
+    <PackageReference Include="SpecFlow" Version="3.1.52-beta" />
+    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.1.52-beta" />
+    <PackageReference Include="SpecFlow.xUnit" Version="3.1.52-beta" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -25,5 +28,27 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelBooking.Core\HotelBooking.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SpecFlow\FullyOccupiedDates.feature.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FullyOccupiedDates.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SpecFlow\CreateBooking.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CreateBooking.feature.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="SpecFlow\FullyOccupiedDates.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>FullyOccupiedDates.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
   </ItemGroup>
 </Project>
