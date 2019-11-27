@@ -11,6 +11,47 @@ namespace HotelBooking.UnitTests.Services
 {
     public class BookingManagerTests
     {
+        //TestCase 1
+        [InlineData(9, 9, true)]
+        //TestCase 2
+        [InlineData(9, 21, false)]
+        //TestCase 3
+        [InlineData(21, 21, true)]
+        //TestCase 4
+        [InlineData(9, 10, false)]
+        //TestCase 5
+        [InlineData(9, 20, false)]
+        //TestCase 6
+        [InlineData(10, 21, false)]
+        //TestCase 7
+        [InlineData(20, 21, false)]
+        //TestCase 8
+        [InlineData(10, 10, false)]
+        //TestCase 9
+        [InlineData(10, 20, false)]
+        //TestCase 10
+        [InlineData(20, 20, false)]
+        [Theory]
+        public void CreateBooking_DecisionTable(int start, int end, bool shouldSucceed)
+        {
+            var (manager, repository) = Fakes;
+            manager.CreateBooking(new Booking
+                    {StartDate = DateTime.Today.AddDays(start), EndDate = DateTime.Today.AddDays(end)}).Should()
+                .Be(shouldSucceed);
+            ((FakeBookingRepository) repository).addWasCalled.Should().Be(shouldSucceed);
+        }
+
+        [InlineData(15, 16)]
+        [Theory]
+        public void CreateBooking_WhileFullyBooked_Fails(int start, int end)
+        {
+            var (manager, repository) = Fakes;
+            manager.CreateBooking(new Booking
+                    {StartDate = DateTime.Today.AddDays(start), EndDate = DateTime.Today.AddDays(end)}).Should()
+                .BeFalse();
+            ((FakeBookingRepository) repository).addWasCalled.Should().BeFalse();
+        }
+
         private static (BookingManager manager, IRepository<Booking> repository) Fakes
         {
             get
@@ -62,47 +103,6 @@ namespace HotelBooking.UnitTests.Services
                     {StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(2)}).Should()
                 .BeTrue();
             ((FakeBookingRepository) repository).addWasCalled.Should().BeTrue();
-        }
-
-        [InlineData(15,16)]
-        [Theory]
-        public void CreateBooking_WhileFullyBooked_Fails(int start, int end)
-        {
-            var (manager, repository) = Fakes;
-            manager.CreateBooking(new Booking
-                    {StartDate = DateTime.Today.AddDays(start), EndDate = DateTime.Today.AddDays(end)}).Should()
-                .BeFalse();
-            ((FakeBookingRepository) repository).addWasCalled.Should().BeFalse();
-        }
-
-        //TestCase 1
-        [InlineData(9,9,true)]
-        //TestCase 2
-        [InlineData(9,21,false)]
-        //TestCase 3
-        [InlineData(21,21,true)]
-        //TestCase 4
-        [InlineData(9,10,false)]
-        //TestCase 5
-        [InlineData(9,20,false)]
-        //TestCase 6
-        [InlineData(10,21,false)]
-        //TestCase 7
-        [InlineData(20,21,false)]
-        //TestCase 8
-        [InlineData(10,10,false)]
-        //TestCase 9
-        [InlineData(10,20,false)]
-        //TestCase 10
-        [InlineData(20,20,false)]
-        [Theory]
-        public void CreateBooking_DecisionTable(int start, int end, bool shouldSucceed)
-        {
-            var (manager, repository) = Fakes;
-            manager.CreateBooking(new Booking
-                    {StartDate = DateTime.Today.AddDays(start), EndDate = DateTime.Today.AddDays(end)}).Should()
-                .Be(shouldSucceed);
-            ((FakeBookingRepository) repository).addWasCalled.Should().Be(shouldSucceed);
         }
 
         [Fact]
