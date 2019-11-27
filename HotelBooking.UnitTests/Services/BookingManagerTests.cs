@@ -65,6 +65,23 @@ namespace HotelBooking.UnitTests.Services
         }
 
         [Theory]
+        [InlineData(1, 0, true, 0)]
+        [InlineData(-1, 1, true, 0)]
+        [InlineData(11, 12, false, -1)]
+        [InlineData(5, 6, false, 1)]
+        public void FindAvailableRoom_AllPaths(int start, int end, bool shouldThrow, int result)
+        {
+            if (shouldThrow)
+                Assert.Throws<ArgumentException>(() =>
+                {
+                    Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end));
+                });
+            else
+                Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should()
+                    .Be(result);
+        }
+
+        [Theory]
         [InlineData(5, 15)]
         [InlineData(15, 16)]
         [InlineData(15, 25)]
@@ -72,6 +89,22 @@ namespace HotelBooking.UnitTests.Services
         public void FindAvailableRoom_RoomsAlreadyBooked_ReturnsMinusOne(int start, int end)
         {
             Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should().Be(-1);
+        }
+
+        [Theory]
+        [InlineData(1, 0, true, 0)]
+        [InlineData(0, 1, false, 0)]
+        [InlineData(11, 12, false, 2)]
+        public void GetFullyOccupiedDates_AllPaths(int start, int end, bool shouldThrow, int resultCount)
+        {
+            if (shouldThrow)
+                Assert.Throws<ArgumentException>(() =>
+                {
+                    Fakes.manager.GetFullyOccupiedDates(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end));
+                });
+            else
+                Fakes.manager.GetFullyOccupiedDates(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should()
+                    .HaveCount(resultCount);
         }
 
         [Property]
