@@ -74,6 +74,22 @@ namespace HotelBooking.UnitTests.Services
             Fakes.manager.FindAvailableRoom(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should().Be(-1);
         }
 
+        [Theory]
+        [InlineData(1, 0, true, 0)]
+        [InlineData(0, 1, false, 0)]
+        [InlineData(11, 12, false, 2)]
+        public void GetFullyOccupiedDates_AllPaths(int start, int end, bool shouldThrow, int resultCount)
+        {
+            if (shouldThrow)
+                Assert.Throws<ArgumentException>(() =>
+                {
+                    Fakes.manager.GetFullyOccupiedDates(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end));
+                });
+            else
+                Fakes.manager.GetFullyOccupiedDates(DateTime.Today.AddDays(start), DateTime.Today.AddDays(end)).Should()
+                    .HaveCount(resultCount);
+        }
+
         [Property]
         public void GetFullyOccupiedDates_RandomDates(DateTime start, DateTime end)
         {
