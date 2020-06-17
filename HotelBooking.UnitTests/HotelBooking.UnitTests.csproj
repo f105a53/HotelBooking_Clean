@@ -14,7 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
-    <PackageReference Include="Moq" Version="4.13.0" />
+    <PackageReference Include="Moq" Version="4.14.2" />
     <PackageReference Include="SpecFlow" Version="3.1.52-beta" />
     <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.1.52-beta" />
     <PackageReference Include="SpecFlow.xUnit" Version="3.1.52-beta" />
